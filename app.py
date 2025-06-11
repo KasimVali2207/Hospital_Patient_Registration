@@ -1,11 +1,15 @@
 from flask import Flask, render_template, request, redirect
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+import certifi
 
 app = Flask(__name__)
 
-# Correct MongoDB Atlas URI
-client = MongoClient("mongodb+srv://dudekulak43:Vali%406303per@cluster0.uecjcas.mongodb.net/?retryWrites=true&w=majority")
+# Correct MongoDB Atlas URI with proper SSL handling
+MONGO_URI = "mongodb+srv://dudekulak43:Vali%406303per@cluster0.uecjcas.mongodb.net/?retryWrites=true&w=majority"
+
+# Use certifi to verify SSL certificates
+client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
 
 db = client["Hospital"]
 patients = db["patients"]
