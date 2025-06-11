@@ -1,0 +1,113 @@
+<!-- File: templates/add.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Patient</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .form-container {
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px 50px;
+            width: 100%;
+            max-width: 600px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h2 {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        label {
+            font-weight: 600;
+            color: #34495e;
+        }
+        .form-control, .form-select {
+            border-radius: 10px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 0 0.2rem rgba(79, 172, 254, 0.25);
+        }
+        .btn-submit {
+            margin-top: 20px;
+            background: linear-gradient(to right, #43e97b, #38f9d7);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 30px;
+            width: 100%;
+            transition: background 0.3s ease-in-out;
+        }
+        .btn-submit:hover {
+            background: linear-gradient(to right, #38f9d7, #43e97b);
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>🩺 Register New Patient</h2>
+        <form method="POST" onsubmit="takeScreenshot('add')">
+            <div class="mb-3">
+                <label for="name" class="form-label">Patient Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="John Doe" required>
+            </div>
+            <div class="mb-3">
+                <label for="age" class="form-label">Age</label>
+                <input type="number" class="form-control" id="age" name="age" placeholder="35" required>
+            </div>
+            <div class="mb-3">
+                <label for="gender" class="form-label">Gender</label>
+                <select class="form-select" id="gender" name="gender" required>
+                    <option disabled selected>Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="disease" class="form-label">Disease / Diagnosis</label>
+                <input type="text" class="form-control" id="disease" name="disease" placeholder="Fever, Diabetes, etc." required>
+            </div>
+            <button type="submit" class="btn btn-submit">➕ Add Patient</button>
+        </form>
+    </div>
+
+    <script>
+        function takeScreenshot(action) {
+            html2canvas(document.body).then(canvas => {
+                const image = canvas.toDataURL("image/png");
+
+                fetch('/save-screenshot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ image: image, action: action })
+                });
+            });
+        }
+    </script>
+</body>
+</html>
