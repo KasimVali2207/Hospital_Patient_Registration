@@ -2,135 +2,346 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🏥 Hospital Patient Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(to right, #e1c912);
+        :root {
+            --primary-gradient: linear-gradient(to right, #4e54c8, #8f94fb);
+            --btn-gradient: linear-gradient(to right, #56ccf2, #2f80ed);
+            --btn-hover: linear-gradient(to right, #2f80ed, #56ccf2);
+            --shadow-normal: 0 8px 20px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.15);
+            --header-radius: 16px;
+            --card-radius: 10px;
+            --btn-radius: 20px;
+            --transition: all 0.3s ease;
+            --card-border: 2px solid #4e54c8;
+        }
+        html, body {
             min-height: 100vh;
-            color: #8620df;
-            padding-bottom: 50px;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            background: linear-gradient(135deg, #f4f7fb, #e8edf7);
+            padding-bottom: 60px;
+            overflow-x: hidden;
         }
         .header-container {
-            background: linear-gradient(135deg,  #3f138c 100%);
-            border-radius: 20px;
-            padding: 32px 0 24px;
-            margin: 40px auto;
-            box-shadow: 0 10px 40px rgba(26, 140, 255, 0.2);
-            color: rgb(243, 232, 232);
-            max-width: 900px;
+            background: var(--primary-gradient);
+            border-radius: var(--header-radius);
+            padding: 24px 20px;
+            margin: 20px auto 24px;
+            box-shadow: var(--shadow-normal);
+            color: white;
+            max-width: 1000px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
         }
         .header-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
         .header-content h1 {
             font-weight: 700;
-            font-size: 2.5rem;
-            margin: 0;
+            font-size: 2rem;
             display: flex;
             align-items: center;
-            gap: 16px;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 14px;
+            flex-wrap: wrap;
         }
         .add-btn {
-            margin-top: 18px;
-            background: linear-gradient(to right, #43e97b, #38f9d7);
-            color: rgb(13, 13, 14);
+            background: var(--btn-gradient);
+            color: white;
             font-weight: 600;
             border: none;
-            border-radius: 30px;
-            padding: 14px 32px;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
-            transition: background 0.3s, transform 0.2s;
+            border-radius: var(--btn-radius);
+            padding: 10px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            font-size: 1.1rem;
+            gap: 6px;
+            position: relative;
+            overflow: hidden;
         }
+        .add-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.6s;
+        }
+        .add-btn:hover::before { left: 100%; }
         .add-btn:hover {
-            background: linear-gradient(to right, #38f9d7, #43e97b);
-            transform: translateY(-2px) scale(1.03);
+            background: var(--btn-hover);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
         }
         .cards-container {
-            background: rgba(90, 179, 239, 0.95);
-            border-radius: 20px;
-            padding: 32px 24px;
-            margin: 0 auto 40px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.10);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--header-radius);
+            padding: 20px;
+            margin: 0 auto 24px;
+            box-shadow: var(--shadow-normal);
             max-width: 1100px;
         }
+        .no-patients {
+            text-align: center;
+            padding: 24px;
+            font-size: 1rem;
+            color: #777;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            padding: 8px 0;
+        }
         .card {
-            border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(190, 222, 75, 0.08);
-            background: hwb(0 92% 5%);
-            padding: 28px 20px 18px;
-            transition: all 0.3s;
-            border: none;
-            margin-bottom: 24px;
+            border-radius: var(--card-radius);
+            border: var(--card-border);
+            padding: 16px;
+            background: white;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            min-height: 0;
+            height: auto;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
         }
         .card:hover {
-            transform: translateY(-6px) scale(1.02);
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.16);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+        }
+        .profile-photo {
+            width: 72px;
+            height: 72px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .profile-photo:hover {
+            transform: scale(1.05) rotate(6deg);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
         }
         .card h4 {
             font-weight: 700;
-            margin-bottom: 18px;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #1a237e;
+            text-align: center;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            gap: 8px;
+            overflow-wrap: break-word;
+            word-break: break-word;
         }
         .card p {
-            margin-bottom: 10px;
-            font-size: 1rem;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: #4a5568;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            overflow-wrap: break-word;
+            word-break: break-word;
         }
-        .profile-photo {
-            width: 54px;
-            height: 54px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin-bottom: 10px;
-            border: 2px solid #c2e9fb;
-            box-shadow: 0 2px 10px rgba(79, 172, 254, 0.08);
+        .card p strong {
+            color: #1a237e;
+            font-weight: 600;
+            min-width: 60px;
+            display: inline-block;
+        }
+        .card-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: auto;
+            padding-top: 16px;
         }
         .btn-sm {
-            border-radius: 20px;
-            padding: 8px 18px;
-            font-size: 0.95rem;
+            border-radius: var(--btn-radius);
+            padding: 8px 16px;
+            font-size: 0.9rem;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            background: linear-gradient(to right, #0860ef);
-            color: #e4e8ec;
+            color: white;
+            background: #6c63ff;
             border: none;
-            transition: background 0.2s, color 0.2s;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         .btn-sm:hover {
-            background: linear-gradient(to right, #43e97b, #38f9d7);
+            background: #5848e5;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        .btn-sm.edit {
+            background: #4e9af1;
+        }
+        .btn-sm.edit:hover {
+            background: #3a7bc8;
+        }
+        .btn-sm.delete {
+            background: #ff5e62;
+        }
+        .btn-sm.delete:hover {
+            background: #e04b4e;
+        }
+        .card-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff5e62;
             color: white;
+            font-weight: 600;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .card-badge.active {
+            background: #4CAF50;
+        }
+        .alert {
+            border-radius: var(--card-radius);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 16px;
+            border: none;
         }
         .footer {
-            color: #34495e;
-            font-size: 1rem;
-            opacity: 0.85;
+            color: #777;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 24px 16px 16px;
+            margin-top: 24px;
+        }
+        .footer p {
+            margin: 0;
+        }
+        @media (max-width: 992px) {
+            .header-content h1 { font-size: 1.8rem; }
+            .card { padding: 14px; }
+        }
+        @media (max-width: 768px) {
+            .header-container, .cards-container {
+                border-radius: 12px;
+                padding: 16px;
+            }
+            .header-content h1 { font-size: 1.5rem; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .card-actions { flex-direction: column; gap: 8px; }
+            .btn-sm { width: 100%; justify-content: center; }
+            .add-btn { width: 100%; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card {
+            animation: fadeIn 0.4s ease forwards;
+            opacity: 0;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #8f94fb; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6c63ff; }
+        .floating-icon {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            background: var(--btn-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .floating-icon:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+        @media (max-width: 768px) {
+            .floating-icon {
+                bottom: 16px;
+                right: 16px;
+                width: 44px;
+                height: 44px;
+                font-size: 16px;
+            }
+        }
+        .modal-img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 8px;
+        }
+        .modal-content {
+            background: transparent;
+            border: none;
+        }
+        .modal-dialog {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
     </style>
 </head>
 <body>
-
     <div class="header-container">
         <div class="header-content">
-            <h1><i class="fas fa-hospital"></i> Hospital Patient Management</h1>
-            <a href="{{ url_for('add_patient') }}" class="add-btn"><i class="fas fa-plus"></i> Add New Patient</a>
+            <h1><i class="fas fa-hospital-alt"></i> Hospital Patient Management</h1>
+            <div class="header-buttons">
+                <a href="{{ url_for('index') }}" class="add-btn"><i class="fas fa-users"></i>&nbsp;View All Patients</a>
+                <a href="{{ url_for('add_patient') }}" class="add-btn"><i class="fas fa-plus"></i>&nbsp;Add New Patient</a>
+            </div>
         </div>
     </div>
-
     <div class="container cards-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -142,43 +353,69 @@
             {% endfor %}
         {% endif %}
         {% endwith %}
-
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for patient in patients %}
-            <div class="col">
-                <div class="card h-100">
+        {% if patients %}
+            <div class="cards-grid">
+                {% for patient in patients %}
+                <div class="card">
+                    <div class="card-badge active">Active</div>
                     {% if patient.photo_url %}
-                        <img src="{{ patient.photo_url }}" alt="Profile Photo" class="profile-photo mx-auto d-block">
+                        <img src="{{ patient.photo_url }}" alt="Profile Photo" class="profile-photo" data-bs-toggle="modal" data-bs-target="#photoModal{{ loop.index }}" onclick="document.getElementById('photoModalImg{{ loop.index }}').src = this.src">
+                    {% else %}
+                        <img src="https://via.placeholder.com/150" alt="Profile Photo" class="profile-photo" data-bs-toggle="modal" data-bs-target="#photoModal{{ loop.index }}" onclick="document.getElementById('photoModalImg{{ loop.index }}').src = this.src">
                     {% endif %}
                     <h4><i class="fas fa-user-injured"></i> {{ patient.name }}</h4>
-                    <p><strong>Age:</strong> {{ patient.age }}</p>
-                    <p><strong>Gender:</strong> {{ patient.gender }}</p>
-                    <p><strong>Disease:</strong> {{ patient.disease }}</p>
+                    <p><strong>Age:</strong> <span>{{ patient.age }}</span></p>
+                    <p><strong>Gender:</strong> <span>{{ patient.gender }}</span></p>
+                    <p><strong>Disease:</strong> <span>{{ patient.disease }}</span></p>
                     {% if patient.email %}
-                        <p><strong>Email:</strong> {{ patient.email }}</p>
+                        <p><strong>Email:</strong> <span>{{ patient.email }}</span></p>
                     {% endif %}
                     {% if patient.phone %}
-                        <p><strong>Phone:</strong> {{ patient.phone }}</p>
+                        <p><strong>Phone:</strong> <span>{{ patient.phone }}</span></p>
                     {% endif %}
                     {% if patient.address %}
-                        <p><strong>Address:</strong> {{ patient.address }}</p>
+                        <p><strong>Address:</strong> <span>{{ patient.address }}</span></p>
                     {% endif %}
-                    <div class="d-flex justify-content-between mt-3">
-                        <a href="{{ url_for('edit_form', id=patient._id) }}" class="btn btn-sm"><i class="fas fa-edit"></i> Edit</a>
-                        <a href="{{ url_for('delete_patient', id=patient._id) }}" class="btn btn-sm"><i class="fas fa-trash"></i> Delete</a>
+                    <div class="card-actions">
+                        <a href="{{ url_for('edit_form', id=patient._id) }}" class="btn-sm edit"><i class="fas fa-edit"></i> Edit</a>
+                        <a href="{{ url_for('delete_patient', id=patient._id) }}" class="btn-sm delete"><i class="fas fa-trash"></i> Delete</a>
                     </div>
                 </div>
+                <!-- Modal for each photo -->
+                <div class="modal fade" id="photoModal{{ loop.index }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body text-center">
+                                <img id="photoModalImg{{ loop.index }}" class="modal-img" src="" alt="Patient Photo">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-            {% else %}
-            <p class="text-center">No patients found.</p>
-            {% endfor %}
-        </div>
+        {% else %}
+            <div class="no-patients">
+                <i class="fas fa-user-slash" style="font-size: 1.8rem; color: #aaa; margin-bottom: 12px;"></i>
+                <h3>No patients found</h3>
+                <p>Click on "Add New Patient" to get started.</p>
+            </div>
+        {% endif %}
     </div>
-
-    <div class="text-center footer pt-4 pb-3">
+    <a href="{{ url_for('add_patient') }}" class="floating-icon">
+        <i class="fas fa-plus"></i>
+    </a>
+    <div class="footer">
         <p>© 2025 Hospital Patient Management System</p>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${0.1 * index}s`;
+                card.style.opacity = 1;
+            });
+        });
+    </script>
 </body>
 </html>

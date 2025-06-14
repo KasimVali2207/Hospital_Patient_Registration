@@ -7,9 +7,9 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-# MongoDB connection
-MONGO_URI = "mongodb+srv://dudekulak43:Vali%406303per@cluster0.uecjcas.mongodb.net/"
-client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
+# MongoDB connection with secure TLS config
+MONGO_URI = "mongodb+srv://dudekulak43:22BCB7285@cluster0.evbk2xf.mongodb.net/"
+client = MongoClient(MONGO_URI, tls=True, tlsCAFile=certifi.where())
 
 # Database and collection
 db = client["Hospital"]
@@ -58,7 +58,7 @@ def add_patient():
         return redirect(url_for('index'))
     return render_template('add.html')
 
-# Edit form
+# Edit patient form
 @app.route('/edit/<id>')
 def edit_form(id):
     patient = patients.find_one({"_id": ObjectId(id)})
